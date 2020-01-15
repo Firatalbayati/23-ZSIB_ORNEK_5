@@ -1,0 +1,73 @@
+*&---------------------------------------------------------------------*
+*& Report  ZSIB_ORNEK_5
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+REPORT zsib_ornek_5.
+
+TYPE-POOLS zsib2.
+TYPE-POOLS abap.
+TYPE-POOLS sils.
+
+TYPES gty_isim TYPE c LENGTH 30.
+
+DATA:gs_muhendis TYPE zsib2_muhendis,
+     gt_muhendisler TYPE zsib2_t_muhendis,
+     gt_muhendisler2 TYPE zsib2_t_muhendis,
+     gv_isim TYPE c LENGTH 30 VALUE 'fırat',
+     gv_soyisim TYPE c LENGTH 30 VALUE 'albayatı',
+     gv_yas TYPE i VALUE 30.
+
+PERFORM kayit_at USING 'FIRAT'
+                       'ALBAYATI'
+                       30
+                  CHANGING
+                  gt_muhendisler.
+
+
+
+PERFORM tablo_yazdir USING gt_muhendisler.
+
+
+
+PERFORM kayit_at USING gv_isim
+                       gv_soyisim
+                       gv_yas
+                  CHANGING
+                  gt_muhendisler2.
+
+
+PERFORM tablo_yazdir USING gt_muhendisler2.
+
+FORM kayit_at USING iv_isim TYPE gty_isim      "girdi parametreleri
+                    iv_soyisim TYPE gty_isim
+                    iv_yas TYPE i
+                CHANGING
+                  ct_muhendisler TYPE zsib2_t_muhendis.
+
+  DATA ls_muhendis LIKE gs_muhendis.
+
+  gs_muhendis-isim    = iv_isim.
+  gs_muhendis-soyisim = iv_soyisim.
+  gs_muhendis-yas     = iv_yas.
+  APPEND ls_muhendis TO ct_muhendisler.
+
+
+ENDFORM.
+
+
+FORM tablo_yazdir USING it_muhendisler TYPE zsib2_t_muhendis.
+
+
+  DATA ls_muhendis LIKE gs_muhendis.
+
+  LOOP AT it_muhendisler INTO ls_muhendis.
+    WRITE :/ ls_muhendis-isim,
+             ls_muhendis-soyisim,
+             ls_muhendis-yas.
+  ENDLOOP.
+
+ENDFORM.
